@@ -4,45 +4,44 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Http\Resources\ProductResource;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::all();
-        return response()->json($products);
+        $products = Product::with(['brand', 'category'])->paginate();
+        return ProductResource::collection($products);
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'code' => 'required|string|unique:products',
+            'code' => 'required|string|unique:products,code',
             'name' => 'required|string|max:255',
-            'brand' => 'nullable|string',
-            'category' => 'nullable|string',
+            'brand_id' => 'nullable|integer|exists:brands,id',
+            'category_id' => 'nullable|integer|exists:categories,id',
             'description' => 'nullable|string',
             'features' => 'nullable|array',
             'stock' => 'nullable|string',
-            'whatsapp_message' => 'nullable|string',
             'image_url' => 'nullable|string',
-            'active' => 'boolean',
             'pdf_url' => 'nullable|string',
         ]);
 
         $product = Product::create($validated);
-        return response()->json($product, 201);
+        return (new ProductResource($product->load(['brand','category'])))->response()->setStatusCode(201);
     }
 
     public function show(string $id)
     {
-        $product = Product::find($id);
+        $product = Product::with(['brand','category'])->find($id);
         
         if (!$product) {
             return response()->json(['message' => 'Product not found'], 404);
         }
 
-        return response()->json($product);
+        return new ProductResource($product);
     }
 
     public function update(Request $request, string $id)
@@ -56,19 +55,17 @@ class ProductController extends Controller
         $validated = $request->validate([
             'code' => 'sometimes|string|unique:products,code,' . $id,
             'name' => 'sometimes|string|max:255',
-            'brand' => 'nullable|string',
-            'category' => 'nullable|string',
+            'brand_id' => 'nullable|integer|exists:brands,id',
+            'category_id' => 'nullable|integer|exists:categories,id',
             'description' => 'nullable|string',
             'features' => 'nullable|array',
             'stock' => 'nullable|string',
-            'whatsapp_message' => 'nullable|string',
             'image_url' => 'nullable|string',
-            'active' => 'boolean',
             'pdf_url' => 'nullable|string',
         ]);
 
         $product->update($validated);
-        return response()->json($product);
+        return new ProductResource($product->load(['brand','category']));
     }
 
     public function destroy(string $id)

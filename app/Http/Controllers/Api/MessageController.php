@@ -4,14 +4,36 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Message;
+use App\Http\Resources\MessageResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class MessageController extends Controller
 {
     public function index()
     {
-        $messages = Message::all();
-        return response()->json($messages);
+        $query = Message::query();
+
+        // Filtro por leído/no leído: ?read=1|0|true|false
+        if (request()->has('read')) {
+            $query->where('read', request()->boolean('read'));
+        }
+
+        // Filtro por rango de fecha en campo 'date': ?from=YYYY-MM-DD&to=YYYY-MM-DD
+        $from = request()->query('from');
+        $to = request()->query('to');
+        if ($from && $to) {
+            $query->whereBetween('date', [Carbon::parse($from), Carbon::parse($to)]);
+        } elseif ($from) {
+            $query->where('date', '>=', Carbon::parse($from));
+        } elseif ($to) {
+            $query->where('date', '<=', Carbon::parse($to));
+        }
+
+        // Orden por fecha descendente por defecto
+        $query->orderBy('date', 'desc');
+
+        return MessageResource::collection($query->paginate());
     }
 
     public function store(Request $request)
@@ -27,7 +49,7 @@ class MessageController extends Controller
         ]);
 
         $message = Message::create($validated);
-        return response()->json($message, 201);
+        return (new MessageResource($message))->response()->setStatusCode(201);
     }
 
     public function show(string $id)
@@ -38,7 +60,7 @@ class MessageController extends Controller
             return response()->json(['message' => 'Message not found'], 404);
         }
 
-        return response()->json($message);
+        return new MessageResource($message);
     }
 
     public function update(Request $request, string $id)
@@ -60,7 +82,7 @@ class MessageController extends Controller
         ]);
 
         $message->update($validated);
-        return response()->json($message);
+        return new MessageResource($message);
     }
 
     public function destroy(string $id)

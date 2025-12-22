@@ -5,21 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Message extends Model
+class Slide extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'firstName',
-        'lastName',
-        'phone',
-        'email',
-        'content',
-        'date',
-        'read',
+        'image_url',
+        'active',
     ];
 
     protected $casts = [
-        'date' => 'datetime',
-        'read' => 'boolean',
+        'active' => 'boolean',
     ];
 }

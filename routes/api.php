@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\MessageController;
+use App\Http\Controllers\Api\SlideController;
 
 // ---------------------------------------------------------
 // 1. Ruta pública básica (para probar la API rápidamente)
@@ -56,6 +57,11 @@ Route::middleware('bearer')->group(function () {
     // 3.5. Módulo de Mensajes
     // ---------------------------
     Route::apiResource('messages', MessageController::class);
+
+    // ---------------------------
+    // 3.6. Módulo de Slides
+    // ---------------------------
+    Route::apiResource('slides', SlideController::class);
 
     // Logout
     // Route::post('/logout', [AuthController::class, 'logout']);
