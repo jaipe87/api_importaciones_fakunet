@@ -11,6 +11,10 @@ class AuthController extends Controller
 {
     /**
      * Validar credenciales de usuario (login)
+    *
+    * @group Auth
+    * @unauthenticated
+    * Endpoint público para iniciar sesión y obtener información básica del usuario.
      */
     public function login(Request $request)
     {

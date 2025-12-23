@@ -7,6 +7,10 @@ use App\Models\Slide;
 use App\Http\Resources\SlideResource;
 use Illuminate\Http\Request;
 
+/**
+ * @group Slides
+ * Endpoints para gestionar slides del home. Requieren autenticación Bearer.
+ */
 class SlideController extends Controller
 {
     public function index()

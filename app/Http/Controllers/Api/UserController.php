@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * @group Users
+ * Endpoints para gestionar usuarios. Requieren autenticación Bearer.
+ */
 class UserController extends Controller
 {
     /**

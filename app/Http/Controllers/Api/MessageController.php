@@ -8,6 +8,10 @@ use App\Http\Resources\MessageResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
+/**
+ * @group Messages
+ * Endpoints para gestionar mensajes de contacto. Requieren autenticación Bearer.
+ */
 class MessageController extends Controller
 {
     public function index()

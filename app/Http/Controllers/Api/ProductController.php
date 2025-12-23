@@ -7,6 +7,10 @@ use App\Models\Product;
 use App\Http\Resources\ProductResource;
 use Illuminate\Http\Request;
 
+/**
+ * @group Products
+ * Endpoints para gestionar productos. Requieren autenticación Bearer.
+ */
 class ProductController extends Controller
 {
     public function index()

@@ -7,6 +7,10 @@ use App\Models\Category;
 use App\Http\Resources\CategoryResource;
 use Illuminate\Http\Request;
 
+/**
+ * @group Categories
+ * Endpoints para gestionar categorías. Requieren autenticación Bearer.
+ */
 class CategoryController extends Controller
 {
     public function index()

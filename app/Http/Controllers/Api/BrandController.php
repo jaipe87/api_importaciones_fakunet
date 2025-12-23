@@ -7,6 +7,10 @@ use App\Models\Brand;
 use App\Http\Resources\BrandResource;
 use Illuminate\Http\Request;
 
+/**
+ * @group Brands
+ * Endpoints para gestionar marcas. Requieren autenticación Bearer.
+ */
 class BrandController extends Controller
 {
     public function index()
